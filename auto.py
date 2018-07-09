@@ -1,29 +1,65 @@
 import os, sys
 import fileinput
 
+# ======================  edit by yourself  ======================
+sources = [
+          'https://github.com/YinTokey/Egen.git',
+          'https://github.com/YinTokey/Protocol.git'
+          ]
+
+project_name = 'UserModule-master'
+
+# ==================================================================
 
 
 
 
 new_tag = ""
-libCommand = 'pod lib lint --sources=https://github.com/YinTokey/Egen.git,https://github.com/CocoaPods/Specs.git --allow-warnings'
-podPushCommand = 'pod repo push UserModule-master UserModule.podspec --sources=https://github.com/YinTokey/Egen.git,https://github.com/CocoaPods/Specs.git --allow-warnings'
-
+lib_command = ""
+pod_push_command = ""
 spec_file_path = ""
-
+spec_file_name = ""
 find_version_flag = False
+
+
+# libCommand = 'pod lib lint --sources=https://github.com/YinTokey/Egen.git,https://github.com/CocoaPods/Specs.git --allow-warnings'
+# podPushCommand = 'pod repo push UserModule-master UserModule.podspec --sources=https://github.com/YinTokey/Egen.git,https://github.com/CocoaPods/Specs.git --allow-warnings'
 
 def getFilePath():
     for root,dirs,files in os.walk(os.getcwd()):
         for file in files:
             if file.find(".podspec") != -1:
                 global spec_file_path
+                global spec_file_name
                 spec_file_path = "./" + file
-
+                spec_file_name = file
 
 
 def podCommandEdit():
-    print "edit"
+    global lib_command
+    global pod_push_command
+    lib_command = 'pod lib lint --sources='
+    pod_push_command = 'pod repo push ' + project_name + ' ' + spec_file_name
+    if len(sources) > 0:
+        # rely on  private sourece
+        pod_push_command += ' --sources='
+
+        for index,source in enumerate(sources):
+            lib_command += source
+            lib_command += ','
+            pod_push_command += source
+            pod_push_command += ','
+
+        lib_command += 'https://github.com/CocoaPods/Specs.git --allow-warnings'
+        pod_push_command += 'https://github.com/CocoaPods/Specs.git --allow-warnings'
+
+    else:
+        lib_command = 'pod lib lint'
+
+
+    print lib_command
+    print pod_push_command
+
 
 
 def updateVersion():
@@ -31,6 +67,8 @@ def updateVersion():
     infos = f.readlines()
     f.seek(0,0)
     file_data = ""
+    global find_version_flag
+
     for line in infos:
         if line.find(".version") != -1:
             if find_version_flag == False:
@@ -44,7 +82,6 @@ def updateVersion():
                 line = line.replace(substr, newsubstr)
                 global new_tag
                 new_tag = line[length-8:length-2]
-                global find_version_flag
                 find_version_flag = True
 
         file_data += line
@@ -84,11 +121,20 @@ def podPush():
     os.system(podPushCommand)
 
 
+
 # run commands
 # updateVersion()
 # libLint()
 # gitOperation()
 # podPush()
+
 getFilePath()
 updateVersion()
+
+
+podCommandEdit()
+
+
+
+
 

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "UserModule"
-  s.version          = "0.1.12"
+  s.version          = "0.1.16"
   s.summary          = "UserModule summary"
   s.description      = "UserModule description"
   s.homepage         = "http://www.baidu.com"
