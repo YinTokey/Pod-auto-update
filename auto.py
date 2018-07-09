@@ -3,10 +3,8 @@ import fileinput
 
 # ======================  edit by yourself  ======================
 sources = [
-           #'https://github.com/YinTokey/Egen.git',
-           ]
-
-# pod repo push UserModule-master UserModule.podspec --sources=https://github.com/YinTokey/Egen.git,https://github.com/CocoaPods/Specs.git
+          #'https://github.com/YinTokey/Egen.git',
+          ]
 
 project_name = 'UserModule-master'
 podspec_file_name = 'UserModule.podspec'
@@ -35,16 +33,16 @@ def podCommandEdit():
     if len(sources) > 0:
         # rely on  private sourece
         pod_push_command += ' --sources='
-        
+
         for index,source in enumerate(sources):
             lib_command += source
             lib_command += ','
             pod_push_command += source
             pod_push_command += ','
-        
+
         lib_command += source_suffix
         pod_push_command += source_suffix
-    
+
     else:
         lib_command = 'pod lib lint'
 
@@ -55,7 +53,7 @@ def updateVersion():
     f.seek(0,0)
     file_data = ""
     global find_version_flag
-    
+
     for line in infos:
         if line.find(".version") != -1:
             if find_version_flag == False:
@@ -65,27 +63,23 @@ def updateVersion():
                 global new_tag
                 if substr.find(".") != -1:
                     substr = line[length-3:length-2]
-                
+
                 num = int(substr) + 1
                 newsubstr = str(num)
                 line = line.replace(substr, newsubstr)
                 new_tag = line[length-8:length-2]
-                
-                length = len(line)
-                substr = line[length-4:length-2]
-                if substr.find(".") != -1:
-                    new_tag = line[length-7:length-2]
-                
-                
-                find_version_flag = True
-        
-    file_data += line
 
-with open(spec_file_path,'w',) as f1:
-    f1.write(file_data)
+
+
+                find_version_flag = True
+
+        file_data += line
+    
+    with open(spec_file_path,'w',) as f1:
+        f1.write(file_data)
     
     f.close()
-    
+
     print "--------- auto update version -------- "
 
 
