@@ -59,7 +59,9 @@ You can add the dependent sources in the `sources` array, but you don't need the
 ![](https://github.com/YinTokey/Blog_Posts/blob/master/pod_auto_script/2.png?raw=true)
 
 第一项 sources 是pod组件所依赖的私有源地址，它是一个数组，可以填写多个私有源，用逗号隔开。其中 https://github.com/CocoaPods/Specs.git 不需要填写，脚本内已经写了。
+
 第二项是你的项目名称
+
 第三项是podspec文件名
 
 **3.** 打开终端，cd 到这个脚本文件所在目录中，执行 `python auto.py`，即可开始小版本自动升级。如果你的 Pod 已经配置正确，并且之前有过手动输入指令进行升级的经历，那么脚本应该是能成功运行的。
