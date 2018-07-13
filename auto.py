@@ -1,6 +1,5 @@
 import os, sys
 import fileinput
-import re
 
 # ======================  edit by yourself  ======================
 sources = [
