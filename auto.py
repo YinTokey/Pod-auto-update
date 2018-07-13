@@ -1,5 +1,6 @@
 import os, sys
 import fileinput
+import re
 
 # ======================  edit by yourself  ======================
 sources = [
@@ -48,36 +49,62 @@ def podCommandEdit():
 
 
 def updateVersion():
-    f = open(spec_file_path,'r+')
+    f = open(spec_file_path, 'r+')
     infos = f.readlines()
-    f.seek(0,0)
+    f.seek(0, 0)
     file_data = ""
+    new_line = ""
     global find_version_flag
 
     for line in infos:
         if line.find(".version") != -1:
             if find_version_flag == False:
                 # find s.version = "xxxx"
-                length = len(line)
-                substr = line[length-4:length-2]
+
+                spArr = line.split('.')
+                last = spArr[-1]
+                last = last.replace('"', '')
+                last = last.replace("'", "")
+                newNum = int(last) + 1
+
+                arr2 = line.split('"')
+                arr3 = line.split("'")
+
+                versionStr = ""
+                if len(arr2) > 2:
+                    versionStr = arr2[1]
+
+                if len(arr3) > 2:
+                    versionStr = arr3[1]
+                numArr = versionStr.split(".")
+
+                numArr[-1] = str(newNum)
+                # rejoint string
                 global new_tag
-                if substr.find(".") != -1:
-                    substr = line[length-3:length-2]
+                for index,subNumStr in enumerate(numArr):
+                    new_tag += subNumStr
+                    if index < len(numArr)-1:
+                        new_tag += "."
 
-                num = int(substr) + 1
-                newsubstr = str(num)
-                line = line.replace(substr, newsubstr)
-                new_tag = line[length-8:length-2]
+                # complete new_tag
 
+                if len(arr2) > 2:
+                    line = arr2[0] + '"' + new_tag + '"' + '\n'
 
+                if len(arr3) > 2:
+                    line = arr3[0] + "'" + new_tag + "'" + "\n"
 
+                # complete new_line
+
+                print "this is new tag  " + new_tag
                 find_version_flag = True
 
         file_data += line
-    
-    with open(spec_file_path,'w',) as f1:
+
+
+    with open(spec_file_path, 'w', ) as f1:
         f1.write(file_data)
-    
+
     f.close()
 
     print "--------- auto update version -------- "
